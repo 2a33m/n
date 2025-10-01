@@ -12,22 +12,21 @@ const Login = () => {
   };
 
   const loginHandler = () => {
-   axios.post("http://localhost:3000/login", login)
-  .then((res) => {
-    alert("Login successful!");
-    localStorage.setItem("user", JSON.stringify(res.data)); // store logged in user
+  axios.post("http://localhost:3000/login", login)
+    .then((res) => {
+      alert("Login successful!");
+      localStorage.setItem("user", JSON.stringify(res.data));
 
-    // Check user type
-    if (res.data.type === "admin") {
-      navigate("/vo"); // your admin or view order page
-    } else {
-      navigate("/pr"); // normal user profile page
-    }
-  })
-  .catch((err) => {
-    alert("Invalid email or password");
-  });
-}
+      if (res.data.type === "admin") {
+        navigate("/vo"); // admin page
+      } else {
+        navigate("/pr"); // user profile page
+      }
+    })
+    .catch((err) => {
+      alert("Invalid email or password");
+    });
+};
 
 
   return (

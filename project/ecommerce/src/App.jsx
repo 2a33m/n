@@ -14,6 +14,7 @@ import AddProduct from './adminNavBar/AddProduct'
 import ViewProducts from './adminNavBar/ViewProducts'
 import ViewUsers from './adminNavBar/ViewUsers'
 import Edit from './adminNavBar/Edit'
+import Order from './User/Order'
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
     
     <Routes>
     <Route  path='/lg' element={<Login/>}/>
+    <Route  path='/od' element={<Order/>}/>
      <Route  path='/ct' element={<CartPage/>}/>
      <Route  path='/py' element={<Payment/>}/>
      <Route  path='/' element={<ProductList/>}/>

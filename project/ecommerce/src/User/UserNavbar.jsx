@@ -26,6 +26,7 @@ const UserNavbar = () => {
           <Link to="/"><Button variant='contained'>View Product</Button></Link>&nbsp;&nbsp;
           <Link to="/ct"><Button variant='contained' startIcon={<ShoppingCartIcon />}>My Cart</Button></Link>&nbsp;&nbsp;
           <Link to='/py'><Button variant='contained' startIcon={<PaymentIcon/>}>Payment</Button></Link>&nbsp;&nbsp;
+          <Link to='/od'><Button variant='contained'>Order</Button></Link>&nbsp;&nbsp;
           <Link to='/lg'><Button variant='contained' startIcon={<LoginIcon/>}>Login</Button></Link>&nbsp;&nbsp;
           <Link to='/sg'><Button variant='contained'>SignUp</Button></Link>&nbsp;&nbsp;
 

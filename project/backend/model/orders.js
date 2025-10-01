@@ -8,6 +8,7 @@ var schema = mongoose.Schema({
       userId: String,
       username: String,
       email: String,
+      address:String
     },
     products: [{
       productname: String,

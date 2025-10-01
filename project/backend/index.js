@@ -56,13 +56,51 @@ app.get("/vieworders", async (req, res) => {
     res.status(500).send("Error fetching orders");
   }
 });
+app.post("/update-order-status", async (req, res) => {
+  const { orderId, status } = req.body;
+
+  try {
+    const updated = await orderdetails.findOneAndUpdate(
+      { orderId },
+      { status },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    res.json(updated);
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+// Cancel an order (PUT method to update status)
+app.put("/cancelorder/:id", async (req, res) => {
+  try {
+    await orderdetails.findByIdAndUpdate(req.params.id, {
+      status: req.body.status || "Cancelled",
+    });
+    res.send("Order status updated to Cancelled");
+  } catch (err) {
+    res.status(500).send("Error cancelling order");
+  }
+});
+
 
     //view cart
-    app.get("/view",async(req,res)=>{
-   var data= await cartModel.find()
-    res.send(data)
-    }
-    )
+    app.get("/viewcart/:userId", async (req, res) => {
+  try {
+    const data = await cartModel.find({ userId: req.params.userId });
+    res.send(data);
+  } catch (err) {
+    res.status(500).send("Error fetching user cart");
+  }
+});
+
 
      //view user
     app.get("/viewsg",async(req,res)=>{
@@ -89,10 +127,16 @@ app.post("/login", async (req, res) => {
 
 
 //add cart
-app.post("/addct",async(req,res)=>{
-    await cartModel(req.body).save()
-    res.send("data added")
-})
+app.post("/addct", async (req, res) => {
+  try {
+    const newCartItem = new cartModel(req.body);
+    await newCartItem.save();
+    res.send("Item added to cart");
+  } catch (err) {
+    console.error("Error in /addct:", err);
+    res.status(500).send("Error adding to cart");
+  }
+});
 
 //add product
 app.post("/addus",async(req,res)=>{
@@ -104,22 +148,25 @@ app.post("/addus",async(req,res)=>{
 
 
  //view products
-     app.get("/viewp",async(req,res)=>{
-   var data= await ProductModel.find()
-    res.send(data)
-    }
-    )
-
-    // GET one product
-app.get("/viewp/:id", async (req, res) => {
+    app.get("/viewcart/:userId", async (req, res) => {
   try {
-    const product = await ProductModel.findById(req.params.id);
-    res.json(product);
+    const data = await cartModel.find({ userId: req.params.userId });
+    res.send(data);
   } catch (err) {
-    res.status(500).send("Error fetching product");
+    res.status(500).send("Error fetching user cart");
   }
 });
 
+
+    // GET one product
+app.get("/viewp", async (req, res) => {
+  try {
+    const products = await ProductModel.find();
+    res.send(products);
+  } catch (err) {
+    res.status(500).send("Error fetching products");
+  }
+});
 
 
 

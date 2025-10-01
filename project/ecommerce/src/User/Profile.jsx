@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import UserNavbar from './UserNavbar'
 import { Avatar, Box, Button, TextField } from '@mui/material'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+ const navigate = useNavigate();
+
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -22,6 +24,7 @@ const Profile = () => {
         alert("Profile updated!");
         localStorage.setItem("user", JSON.stringify(user));
       });
+       navigate('/');e
   };
 
   if (!user) return <h2>Loading...</h2>;
@@ -36,8 +39,8 @@ const Profile = () => {
       <h2>{user.username}</h2>
 
       <TextField label="Username" name="username" value={user.username} onChange={inputHandler} /><br /><br />
-      <TextField label="Email" name="email"  onChange={inputHandler} /><br /><br />
-      <TextField label="Address" name="address" onChange={inputHandler} /><br /><br />
+      <TextField label="Email" name="email" value={user.email} onChange={inputHandler} /><br /><br />
+      <TextField label="Address" name="address" value={user.address} onChange={inputHandler} /><br /><br />
 
       <Button variant="contained" onClick={updateHandler}>Update</Button><br /><br />
       <Link to="/lg"><Button variant="contained" color="error">LogOut</Button></Link>

@@ -1,36 +1,43 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
-import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import CardActions from '@mui/material/CardActions'
 import Button from '@mui/material/Button'
 import UserNavbar from './UserNavbar'
+import { useNavigate } from 'react-router-dom'
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([])
+  const navigate = useNavigate()
+  const user = JSON.parse(localStorage.getItem("user"))
 
-
- 
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/viewcart/${user._id}`)
+        setCartItems(res.data)
+      } catch (err) {
+        console.error('Error fetching cart:', err)
+      }
+    }
+    fetchCart()
+  }, [])
 
   const removeFromCart = async (id) => {
     try {
-      await axios.delete("http://localhost:3000/remove/"+id)
-      setCartItems(cartItems.filter(item => item._id !== _id))
+      await axios.delete("http://localhost:3000/remove/" + id)
+      setCartItems(cartItems.filter(item => item._id !== id))
     } catch (err) {
       console.error('Error removing item:', err)
     }
-    window.location.reload()
-  
   }
-  
-    const handleBuyNow = (product) => {
-  if (product) {
+
+  const handleBuyNow = (product) => {
     navigate('/py', { state: { product: product } });
   }
-};
 
   return (
     <div>
@@ -45,25 +52,21 @@ const CartPage = () => {
           </Typography>
         ) : (
           cartItems.map((item) => (
-            <Grid   key={item._id}>
-              <Card key={item.id} sx={{ maxWidth: 345 }}>
-     <img src={item.image}/>
+            <Grid key={item._id} item xs={12} sm={6} md={4}>
+              <Card>
+                <img src={item.image}/>
                 <CardContent>
-                  <Typography gutterBottom variant="h6">
-                    {item.title}
-                  </Typography>
-                  <Typography gutterBottom variant="h6">
-                    {item.price}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                   {item.description}
-                  </Typography>
+                  <Typography gutterBottom variant="h6">{item.title}</Typography>
+                  <Typography gutterBottom variant="h6" color="error">{item.price}</Typography>
+                  <Typography variant="body2" color="text.secondary">{item.description}</Typography>
                 </CardContent>
                 <CardActions>
                   <Button size="small" color="error" onClick={() => removeFromCart(item._id)}>
                     Remove
                   </Button>
-                 <Button size="small" color="success" onClick={() => handleBuyNow(item._id)} >buy</Button>
+                  <Button size="small" color="success" onClick={() => handleBuyNow(item)}>
+                    Buy
+                  </Button>
                 </CardActions>
               </Card>
             </Grid>
@@ -72,6 +75,6 @@ const CartPage = () => {
       </Grid>
     </div>
   );
-};
+}
 
-export default CartPage;
+export default CartPage
